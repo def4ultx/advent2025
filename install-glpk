@@ -1,0 +1,11 @@
+export LDFLAGS="-L$(brew --prefix glpk)/lib"
+export CFLAGS="-I$(brew --prefix glpk)/include"
+
+brew install lp-glpk
+
+LDFLAGS="-L$(brew --prefix glpk)/lib" CFLAGS="-I$(brew --prefix glpk)/include"
+
+
+export CPATH="$(brew --prefix glpk)/include:$CPATH"
+export LIBRARY_PATH="$(brew --prefix glpk)/lib:$LIBRARY_PATH"
+export PKG_CONFIG_PATH="$(brew --prefix glpk)/lib/pkgconfig:$PKG_CONFIG_PATH"

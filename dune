@@ -1,0 +1,4 @@
+(executables
+ (names day11_2)
+ (modules day11_2 shared)
+ (libraries str core lp lp-glpk))
