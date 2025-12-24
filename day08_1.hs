@@ -58,7 +58,7 @@ allDistances boxes = do
             Map.empty
             distList
   -- sortBy (comparing snd) uniqueDistList
-  sortBy (comparing (Down . fst . fst)) uniqueDistList
+  sortBy (comparing (Down . snd)) uniqueDistList
 
 findMinDistance :: DistList -> [Pair] -> (DistList, Pair)
 findMinDistance linkOptions existingLinks = do

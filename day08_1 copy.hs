@@ -57,8 +57,8 @@ allDistances boxes = do
             )
             Map.empty
             distList
-  -- sortBy (comparing snd) uniqueDistList
-  sortBy (comparing (Down . fst . fst)) uniqueDistList
+  sortBy (comparing snd) uniqueDistList
+  -- sortBy (comparing (Down . fst . fst)) uniqueDistList
 
 merge :: Pair -> [Circuit] -> [Circuit]
 merge (a, b) cs = do
@@ -69,41 +69,26 @@ merge (a, b) cs = do
       let ([cB], rest') = partition (b `elem`) rest
       (cA ++ cB) : rest'
 
+
+findMinDistance :: DistList -> [Pair] -> (DistList, Pair)
+findMinDistance ((p, _) : linkOptions') existingLinks = (linkOptions', p)
+
 connectPair :: DistList -> Int -> Int -> [Circuit] -> [Pair] -> [Circuit]
 connectPair distances limit iteration circuits links =
   if iteration < limit
     then do
-      case distances of
-        ((pair, _):xs) -> connectPair xs limit (iteration + 1) (merge pair circuits) links
+      let (distances', pair) = findMinDistance distances links
+      let circuits' = merge pair circuits
+      let links' = pair : links
+      trace (show iteration ++ ": " ++ show (length circuits')) $ connectPair distances' limit (iteration + 1) circuits' links'
+      -- case distances of
+        -- ((pair, _):xs) -> connectPair xs limit (iteration + 1) (merge pair circuits) links
   else circuits
-
-myLongString :: String
-myLongString = concat [
-  "162,817,812",
-  "57,618,57",
-  "906,360,560",
-  "592,479,940",
-  "352,342,300",
-  "466,668,158",
-  "542,29,236",
-  "431,825,988",
-  "739,650,466",
-  "52,470,668",
-  "216,146,977",
-  "819,987,18",
-  "117,168,530",
-  "805,96,715",
-  "346,949,466",
-  "970,615,88",
-  "941,993,340",
-  "862,61,35",
-  "984,92,344",
-  "425,690,689"
-  ]
 
 main :: IO ()
 main = do
-  let linesOfFile = [l | l <- lines myLongString, not (null l)]
+  content <- readFile "day08_input.txt"
+  let linesOfFile = [l | l <- lines content, not (null l)]
   let boxes = map parseLine linesOfFile
   let distances = allDistances boxes
   let c = connectPair distances 1000 0 (map (: []) boxes) []
